@@ -20,9 +20,7 @@ function getCleanDirectors(moviesArray) {
 function howManyMovies(moviesArray) {
     return moviesArray
         .filter(item => item.director == "Steven Spielberg" 
-                && item.genre
-                .map(item => item.toLowerCase())
-                .includes("drama"))
+                && item.genre.includes("Drama"))
         .length;
 }
 
@@ -34,26 +32,20 @@ function scoresAverage(moviesArray) {
 
     return Number((
         moviesArray
-        .map(item => item.score ? Number(item.score) : 0)
-        .reduce((acc, score) => acc + score, 0) / moviesArray.length)
+        .reduce((acc, movie) => acc + (movie.score || 0), 0) / moviesArray.length)
         .toFixed(2));
 }
 
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesScore(moviesArray) {
-    const dramaMoviesScores = moviesArray
-    .filter(item => item.genre
-        .map(genre => genre.toLowerCase())
-        .includes("drama"))
-    .map(drama => drama.score ? Number(drama.score) : 0)
+    const dramaMovies = moviesArray
+    .filter(item => item.genre.includes("Drama"));
 
-    if (dramaMoviesScores.length === 0) {
-        return 0;
-    }
+    if (dramaMovies.length === 0) return 0;
 
-    const scoreSum = dramaMoviesScores.reduce((acc, score) => acc + score, 0)
+    const scoreSum = dramaMovies.reduce((acc, movie) => acc + (movie.score || 0), 0)
 
-    return Number((scoreSum / dramaMoviesScores.length).toFixed(2))
+    return Number((scoreSum / dramaMovies.length).toFixed(2))
 }
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
@@ -61,15 +53,20 @@ function orderByYear(moviesArray) {
     const shallowCopy = [...moviesArray]
 
     return shallowCopy
-    .sort((a,b) => a.title === b.title ? 0 : a.title < b.title ? -1 : 1)
-    .sort((a, b) => a.year - b.year)
+    .sort((a,b) => {
+        if (a.year === b.year) {
+            return a.title.localeCompare(b.title, 'en', {sensitivity: 'base' })
+        } else {
+            return a.year - b.year;
+        }
+    })
 }
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
 function orderAlphabetically(moviesArray) {
     return moviesArray
     .map(item => item.title)
-    .sort((a,b) => a === b ? 0 : a < b ? -1 : 1)
+    .sort((a,b) => a.localeCompare(b, 'en', {sensitivity: 'base' }))
     .slice(0, 20)
 }
 
