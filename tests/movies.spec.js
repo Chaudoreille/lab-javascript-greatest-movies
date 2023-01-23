@@ -40,6 +40,37 @@ describe('Function "getAllDirectors"', () => {
   });
 });
 
+// Iteration 1.1
+
+describe('Function "getCleanDirectors"', () => {
+  it('should be declared', () => {
+    expect(typeof getCleanDirectors).toBe('function');
+  });
+
+  it('should return an array', () => {
+    expect(getCleanDirectors(movies) instanceof Array).toBe(true);
+  });
+
+  it('should return a new array, not update the original one', () => {
+    expect(getCleanDirectors(movies) instanceof Array).toBe(true);
+    expect(getCleanDirectors(movies)).not.toEqual(movies);
+  });
+
+  it ('should return a 1 element array if all elements have the same director', () =>{
+    expect(getCleanDirectors([
+      {director: 'Steven Spielberg'},
+      {director: 'Steven Spielberg'},
+      {director: 'Steven Spielberg'},
+      {director: 'Steven Spielberg'}
+    ]).length).toBe(1);
+  });
+
+  it ('should return a 149 element array when provided with the data from movies', () => {
+    expect(getCleanDirectors(movies).length).toBe(149);
+  });
+});
+
+
 // Iteration 2
 
 describe('Function "howManyMovies"', () => {
